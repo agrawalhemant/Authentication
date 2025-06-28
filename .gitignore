@@ -1,0 +1,20 @@
+# .NET build artifacts
+bin/
+obj/
+*.user
+*.suo
+*.log
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+
+# Secrets & configs
+appsettings.json
+appsettings.*.json
+!.appsettings.Development.json
+
+# Mac system files
+.DS_Store
