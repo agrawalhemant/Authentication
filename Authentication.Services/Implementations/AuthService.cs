@@ -113,6 +113,7 @@ public class AuthService : IAuthService
         }
 
         user.email = request.NewEmail;
+        user.isemailverified = false;
         user.updatedat = DateTime.UtcNow;
 
         await _userRepository.UpdateUserAsync(user, cancellationToken);

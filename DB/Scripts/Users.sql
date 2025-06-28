@@ -1,9 +1,9 @@
 CREATE TABLE Users (
                        Id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                        FirstName VARCHAR(100) NOT NULL,
-                       LastName VARCHAR(100) NOT NULL,
+                       LastName VARCHAR(100),
                        Email VARCHAR(150) UNIQUE NOT NULL,
-                       PhoneNumber VARCHAR(15) UNIQUE NOT NULL,
+                       PhoneNumber VARCHAR(15) UNIQUE,
                        PasswordHash TEXT NOT NULL,
                        IsEmailVerified BOOLEAN DEFAULT FALSE,
                        IsPhoneVerified BOOLEAN DEFAULT FALSE,
