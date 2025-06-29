@@ -1,7 +1,5 @@
-using Authentication.DAL.Interfaces;
 using Authentication.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Authentication.API.Controllers
@@ -20,6 +18,7 @@ namespace Authentication.API.Controllers
         /// Get user details by userId
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Admin, User")]
         [HttpGet("{userId}", Name = "GetUserDetails")]
         public async Task<IActionResult> GetUserDetailsAsync(Guid userId, CancellationToken cancellationToken = default)
         {
@@ -40,7 +39,6 @@ namespace Authentication.API.Controllers
         /// Get all active users
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Admin, User")]
         [HttpGet("all", Name = "GetAllUserDetails")]
         public async Task<IActionResult> GetAllUserDetailsAsync(int pageNumber = 1, int size = 10, CancellationToken cancellationToken = default)
         {

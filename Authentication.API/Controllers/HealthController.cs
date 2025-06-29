@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Authentication.API.Controllers;
 
@@ -9,6 +10,8 @@ public class HealthController : ControllerBase
     {
         
     }
+    
+    [DisableRateLimiting]
     [Route("")]
     [HttpGet]
     public IActionResult Get()

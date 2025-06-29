@@ -9,13 +9,17 @@ namespace Authentication.Services.Implementations;
 public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
+    private readonly IEmailVerificationRepository _emailVerificationRepository;
+    private readonly IPhoneVerificationRepository _phoneVerificationRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly ITokenService _tokenService;
     private readonly IMapper _mapper;
 
-    public AuthService(IUserRepository userRepository, IPasswordHasher passwordHasher, ITokenService tokenService, IMapper mapper)
+    public AuthService(IUserRepository userRepository, IEmailVerificationRepository emailVerificationRepository, IPhoneVerificationRepository phoneVerificationRepository, IPasswordHasher passwordHasher, ITokenService tokenService, IMapper mapper)
     {
         _userRepository = userRepository;
+        _emailVerificationRepository = emailVerificationRepository;
+        _phoneVerificationRepository = phoneVerificationRepository;
         _passwordHasher = passwordHasher;
         _tokenService = tokenService;
         _mapper = mapper;
@@ -106,16 +110,24 @@ public class AuthService : IAuthService
 
         if(user.email == request.NewEmail)
             throw new ArgumentException("Current email & new email can't be same.");
-        
-        if (!_passwordHasher.Verify(request.Password, user.passwordhash))
-        {
-            throw new UnauthorizedAccessException("Current password is incorrect.");
-        }
 
         user.email = request.NewEmail;
         user.isemailverified = false;
         user.updatedat = DateTime.UtcNow;
 
         await _userRepository.UpdateUserAsync(user, cancellationToken);
+        await _emailVerificationRepository.ExpireAllCodesByUserIdAsync(userId, cancellationToken);
+    }
+
+    public async Task UpdatePhoneAsync(Guid userId, string phone, CancellationToken cancellationToken = default)
+    {
+        var user = await _userRepository.GetUserByIdAsync(userId, cancellationToken);
+        if (user == null)
+            throw new KeyNotFoundException("User not found.");
+        user.phonenumber = phone;
+        user.isphoneverified = false;
+        user.updatedat = DateTime.UtcNow;
+        await _userRepository.UpdateUserAsync(user, cancellationToken);
+        await _phoneVerificationRepository.ExpireAllCodesByUserIdAsync(userId, cancellationToken);
     }
 }

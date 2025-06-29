@@ -13,7 +13,7 @@ public partial class PhoneVerification
 
     public DateTime expiresat { get; set; }
 
-    public bool? isused { get; set; }
+    public bool isused { get; set; }
 
     public DateTime? createdat { get; set; }
 

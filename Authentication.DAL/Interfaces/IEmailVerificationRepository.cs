@@ -7,4 +7,5 @@ public interface IEmailVerificationRepository
     Task AddEmailVerificationAsync(EmailVerification emailVerification, CancellationToken cancellationToken = default);
     Task<EmailVerification?> GetEmailVerificationAsync(Guid userId, string code, CancellationToken cancellationToken = default);
     Task UpdateEmailVerificationAsync(EmailVerification emailVerification, CancellationToken cancellationToken = default);
+    Task ExpireAllCodesByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
 }

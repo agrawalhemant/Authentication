@@ -29,4 +29,14 @@ public class EmailVerificationRepository : IEmailVerificationRepository
         _context.emailverifications.Update(emailVerification);
         await _context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task ExpireAllCodesByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        var verifications = await _context.emailverifications
+            .Where(x => x.userid == userId && !x.isused)
+            .ToListAsync(cancellationToken);
+
+        verifications.ForEach(verification => verification.expiresat = DateTime.UtcNow.AddDays(-1));
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 }

@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text;
+using System.Threading.RateLimiting;
 using Authentication.API.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -11,6 +12,7 @@ using Authentication.DAL.Interfaces;
 using Authentication.Services;
 using Authentication.Services.Interfaces;
 using Authentication.Services.Implementations;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -51,6 +53,17 @@ public class Program
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             c.IncludeXmlComments(xmlPath);
+        });
+        
+        // Rate limiter
+        services.AddRateLimiter(options =>
+        {
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+            options.AddFixedWindowLimiter("FixedPolicy", policy =>
+            {
+                policy.PermitLimit = 1;
+                policy.Window = TimeSpan.FromMinutes(1);
+            });
         });
 
         // Custom Middleware
@@ -118,17 +131,20 @@ public class Program
         // Config Service
         services.Configure<PasswordHasherOptions>(configuration.GetSection("PasswordHasher"));
         services.Configure<SendGridSettings>(configuration.GetSection("SendGrid"));
+        services.Configure<TwilioSettings>(configuration.GetSection("Twilio"));
         
         // Register Services
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IPhoneService, PhoneService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         
         // Register Repositories
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
+        services.AddScoped<IPhoneVerificationRepository, PhoneVerificationRepository>();
         #endregion
 
         // automapper
@@ -147,9 +163,10 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseCookiePolicy(); 
+        app.UseRateLimiter();
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.MapControllers();
+        app.MapControllers().RequireRateLimiting("FixedPolicy");
     }
 }

@@ -1,9 +1,12 @@
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using Authentication.Contracts.Config;
 using Authentication.Contracts.DTOs;
 using Authentication.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
 
 namespace Authentication.API.Controllers;
@@ -16,12 +19,14 @@ public class AuthController : ControllerBase
     private readonly ITokenService _tokenService;
     private readonly JwtSettings _jwtSettings;
     private readonly IEmailService _emailService;
+    private readonly IPhoneService _phoneService;
 
-    public AuthController(IAuthService authService, IEmailService emailService, ITokenService tokenService,IOptions<JwtSettings> jwtOptions)
+    public AuthController(IAuthService authService, IEmailService emailService, ITokenService tokenService, IPhoneService phoneService, IOptions<JwtSettings> jwtOptions)
     {
         _authService = authService;
         _tokenService = tokenService;
         _emailService = emailService;
+        _phoneService = phoneService;
         _jwtSettings = jwtOptions.Value;
     }
     
@@ -31,6 +36,7 @@ public class AuthController : ControllerBase
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    [DisableRateLimiting]
     [HttpPost("register")]
     public async Task<IActionResult> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default)
     {
@@ -59,6 +65,7 @@ public class AuthController : ControllerBase
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    [DisableRateLimiting]
     [HttpPost("login")]
     public async Task<IActionResult> LoginAsync([FromBody] LoginRequest request, CancellationToken cancellationToken)
     {
@@ -82,9 +89,10 @@ public class AuthController : ControllerBase
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    [DisableRateLimiting]
     [Authorize]
     [HttpPost("logout")]
-    public async Task<IActionResult> LogoutAsync(CancellationToken cancellationToken = default)
+    public async Task<IActionResult> LogoutAsync()
     {
         _tokenService.SetTokenCookie(Response, _jwtSettings.AccessCookie, "", -1);
         return NoContent();
@@ -96,6 +104,7 @@ public class AuthController : ControllerBase
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    [DisableRateLimiting]
     [Authorize]
     [HttpPut("change-email")]
     public async Task<IActionResult> ChangeEmailAsync([FromBody] ChangeEmailRequest request, CancellationToken cancellationToken)
@@ -121,6 +130,7 @@ public class AuthController : ControllerBase
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    [DisableRateLimiting]
     [Authorize]
     [HttpPut("change-password")]
     public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordRequest request, CancellationToken cancellationToken)
@@ -146,7 +156,7 @@ public class AuthController : ControllerBase
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpPost("email/send-verification")]
+    [HttpPost("email/send-verification-code")]
     public async Task<IActionResult> SendVerificationEmailAsync(CancellationToken cancellationToken)
     {
         try
@@ -170,9 +180,10 @@ public class AuthController : ControllerBase
     /// <param name="code"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    [DisableRateLimiting]
     [Authorize]
     [HttpPost("email/verify-code")]
-    public async Task<IActionResult> VerifyEmailAsync(string code, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> VerifyEmailAsync([Required] string code, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -181,6 +192,93 @@ public class AuthController : ControllerBase
                 return Unauthorized("Invalid user ID.");
             
             var res = await _emailService.VerifyEmailAsync(userId, code, cancellationToken);
+            if(res.status)
+                return Ok(res.message);
+            else
+                return BadRequest(res.message);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// Add or update a phone number (Phone number should be in the format of country code followed by phone number)
+    /// </summary>
+    /// <param name="phoneNumber"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPut("phone/add")]
+    public async Task<IActionResult> AddOrUpdatePhoneNumberAsync([Required] string phoneNumber, bool sendVerificationSms = false,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!Guid.TryParse(userIdClaim, out var userId))
+                return Unauthorized("Invalid user ID.");
+        
+            if(!Regex.IsMatch(phoneNumber, @"^\+[1-9]\d+$"))
+                return BadRequest("Phone number should be in the format of country code followed by phone number.");
+            
+            await _authService.UpdatePhoneAsync(userId, phoneNumber, cancellationToken);
+            if (sendVerificationSms)
+            {
+                await _phoneService.SendVerificationSmsAsync(userId, cancellationToken);
+                return Ok(new { message = "Phone number added successfully. Verification code sent to your phone." });
+            }
+            return Ok(new { message = "Phone number added successfully. Please Verify your phone number." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+    
+    /// <summary>
+    /// Send verification code to phone number
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [Authorize]
+    [HttpPost("phone/send-verification-code")]
+    public async Task<IActionResult> SendVerificationSmsAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!Guid.TryParse(userIdClaim, out var userId))
+                return Unauthorized("Invalid user ID.");
+            
+            await _phoneService.SendVerificationSmsAsync(userId, cancellationToken);
+            return Ok("Verification code sent to your phone");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+    
+    /// <summary>
+    /// verify phone number using verification code
+    /// </summary>
+    /// <param name="code"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [DisableRateLimiting]
+    [Authorize]
+    [HttpPost("phone/verify-code")]
+    public async Task<IActionResult> VerifyPhoneAsync([Required] string code, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!Guid.TryParse(userIdClaim, out var userId))
+                return Unauthorized("Invalid user ID.");
+            
+            var res = await _phoneService.VerifyPhoneAsync(userId, code, cancellationToken);
             if(res.status)
                 return Ok(res.message);
             else

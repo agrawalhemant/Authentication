@@ -79,7 +79,7 @@ public class EmailService : IEmailService
             return (false, "Verification code has expired.");
         
         emailVerification.isused = true;
-        
+        emailVerification.expiresat = DateTime.UtcNow.AddMinutes(-1);
         await _emailVerificationRepository.UpdateEmailVerificationAsync(emailVerification, cancellationToken);
         
         user.isemailverified = true;

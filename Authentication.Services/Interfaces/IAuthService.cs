@@ -8,4 +8,5 @@ public interface IAuthService
     Task<(SecurityToken, LoginResponse?)> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default);
     Task ChangePasswordAsync(Guid userId, ChangePasswordRequest request, CancellationToken cancellationToken = default);
     Task ChangeEmailAsync(Guid userId, ChangeEmailRequest request, CancellationToken cancellationToken = default);
+    Task UpdatePhoneAsync(Guid userId, string phone, CancellationToken cancellationToken = default);
 }
