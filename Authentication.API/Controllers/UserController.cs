@@ -21,7 +21,7 @@ namespace Authentication.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{userId}", Name = "GetUserDetails")]
-        public async Task<ActionResult> GetUserDetailsAsync(Guid userId, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetUserDetailsAsync(Guid userId, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace Authentication.API.Controllers
         /// <returns></returns>
         [Authorize(Roles = "Admin, User")]
         [HttpGet("all", Name = "GetAllUserDetails")]
-        public async Task<ActionResult> GetAllUserDetailsAsync(int pageNumber = 1, int size = 10, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetAllUserDetailsAsync(int pageNumber = 1, int size = 10, CancellationToken cancellationToken = default)
         {
             try
             {
