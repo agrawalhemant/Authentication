@@ -12,7 +12,6 @@ obj/
 .idea/
 
 # Secrets & configs
-appsettings.json
 appsettings.*.json
 !.appsettings.Development.json
 
