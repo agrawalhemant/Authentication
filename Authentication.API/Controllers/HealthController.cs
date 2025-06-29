@@ -9,8 +9,7 @@ public class HealthController : ControllerBase
     {
         
     }
-    
-    [Route("/health")]
+    [Route("")]
     [HttpGet]
     public IActionResult Get()
     {
