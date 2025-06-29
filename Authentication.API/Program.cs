@@ -140,11 +140,12 @@ public class Program
         app.UseMiddleware<ExceptionHandlingMiddleware>();
         app.UseMiddleware<RequestLoggingMiddleware>();
 
-        if (app.Environment.IsDevelopment())
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
         {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Authentication API V1");
+            c.RoutePrefix = string.Empty; // optional: serve Swagger at root `/`
+        });
 
         app.UseCors("AllowFrontend");
 
