@@ -25,7 +25,9 @@ public class EmailService : IEmailService
     public async Task SendWelcomeEmailAsync(string toEmail, string firstName, CancellationToken cancellationToken = default)
     {
         const string subject = "Welcome to Authentication App";
-        var htmlTemplate = await File.ReadAllTextAsync("../Authentication.Utility/Templates/WelcomeEmail.html", cancellationToken);
+        var path = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "WelcomeEmail.html");
+        var htmlTemplate = await File.ReadAllTextAsync(path, cancellationToken);
+        
         var emailHtml = htmlTemplate
             .Replace("{{FirstName}}", firstName)
             .Replace("{{AppName}}", "Authentication App")
@@ -53,7 +55,8 @@ public class EmailService : IEmailService
         await _emailVerificationRepository.AddEmailVerificationAsync(emailVerification, cancellationToken);
         
         const string subject = "Verify your email address";
-        var htmlTemplate = await File.ReadAllTextAsync("../Authentication.Utility/Templates/VerificationCodeEmail.html", cancellationToken);
+        var path = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "VerificationCodeEmail.html");
+        var htmlTemplate = await File.ReadAllTextAsync(path, cancellationToken);
         var emailHtml = htmlTemplate
             .Replace("{{UserName}}", user.firstname + " " + user.lastname)
             .Replace("{{VerificationCode}}", code)
@@ -83,7 +86,8 @@ public class EmailService : IEmailService
         await _userRepository.UpdateUserAsync(user, cancellationToken);
         
         const string subject = "Email verification Successful";
-        var htmlTemplate = await File.ReadAllTextAsync("../Authentication.Utility/Templates/SuccessfulVerificationEmail.html", cancellationToken);
+        var path = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "SuccessfulVerificationEmail.html");
+        var htmlTemplate = await File.ReadAllTextAsync(path, cancellationToken);
         var emailHtml = htmlTemplate
             .Replace("{{UserName}}", user.firstname + " " + user.lastname)
             .Replace("{{AppName}}", "Authentication App")

@@ -17,3 +17,6 @@ appsettings.*.json
 
 # Mac system files
 .DS_Store
+
+# Ignore publish output
+publish/

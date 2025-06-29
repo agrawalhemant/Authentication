@@ -9,5 +9,10 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     </ItemGroup>
-
+    <ItemGroup>
+        <Content Include="Templates\*.html">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Templates\.DS_Store" />
+    </ItemGroup>
 </Project>
