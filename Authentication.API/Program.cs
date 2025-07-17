@@ -61,7 +61,7 @@ public class Program
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
             options.AddFixedWindowLimiter("FixedPolicy", policy =>
             {
-                policy.PermitLimit = 1;
+                policy.PermitLimit = 100;
                 policy.Window = TimeSpan.FromMinutes(1);
             });
         });
