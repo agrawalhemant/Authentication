@@ -1,3 +1,6 @@
+# Live Project Link
+https://authentication-c19a.onrender.com/swagger/index.html
+
 # ASP.NET Core Project
 
 This project is built using **ASP.NET Core**, targeting **.NET 8.0**. It utilizes MVC architecture with **Razor Pages** for building the front-end UI and is written in **C# 12.0**.
