@@ -46,6 +46,7 @@ public class UserService : IUserService
         pageResult.PageSize = pageSize;
         pageResult.CurrentPage = pageNumber;
         pageResult.Result = _mapper.Map<List<UserDto?>>(users);
+        pageResult.TotalPages = (int)Math.Ceiling(totalUsers / (double)pageSize);
         return pageResult;
     }
 }
