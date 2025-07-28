@@ -1,6 +1,8 @@
 # Live Project Link
 https://authentication-c19a.onrender.com/swagger/index.html
 
+There is a rate limit of 100 requests per minute 
+
 # ASP.NET Core Project
 
 This project is built using **ASP.NET Core**, targeting **.NET 8.0**. It utilizes MVC architecture with **Razor Pages** for building the front-end UI and is written in **C# 12.0**.
@@ -27,9 +29,6 @@ To run this project locally, ensure you have the following installed:
 
 2. **Visual Studio 2022** or **JetBrains Rider**  
    (For development and debugging)
-
-3. **Node.js (optional)** (If client-side package management is required)  
-   Download from: [https://nodejs.org/](https://nodejs.org/)
 
 ---
 
@@ -69,9 +68,6 @@ Below is a brief overview of the key folders and files:
 - **Views/**
   Contains the Razor Page views for rendering HTML.
 
-- **wwwroot/**
-  Static files, such as CSS, JavaScript, and images.
-
 - **Program.cs**
   The application entry point.
 
@@ -82,9 +78,8 @@ Below is a brief overview of the key folders and files:
 
 ## Technologies Used
 
-- **ASP.NET Core MVC**
-- **Razor Pages**
-- **Entity Framework Core** (if applicable)
+- **ASP.NET Core**
+- **Entity Framework Core** 
 - **C# 12.0**
 - **.NET 8.0**
 
@@ -95,24 +90,6 @@ Below is a brief overview of the key folders and files:
 ### Debugging
 
 The project is optimized for debugging in **JetBrains Rider** on macOS Sonoma. Set breakpoints in your code, and use the Rider debugger to inspect variables and manage execution flow.
-
----
-
-## Contributing
-
-Contributions are welcome! Please follow these steps to contribute to the project:
-
-1. Fork the repository.
-2. Create a new branch for your feature: `git checkout -b feature-xyz`.
-3. Commit your changes: `git commit -m "Description of changes"`.
-4. Push to your branch: `git push origin feature-xyz`.
-5. Open a pull request.
-
----
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
 
 ---
 
