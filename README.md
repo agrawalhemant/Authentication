@@ -5,7 +5,7 @@ There is a rate limit of 100 requests per minute
 
 # ASP.NET Core Project
 
-This project is built using **ASP.NET Core**, targeting **.NET 8.0**. It utilizes MVC architecture with **Razor Pages** for building the front-end UI and is written in **C# 12.0**.
+This project is built using **ASP.NET Core**, targeting **.NET 8.0**.
 
 ---
 
@@ -13,8 +13,7 @@ This project is built using **ASP.NET Core**, targeting **.NET 8.0**. It utilize
 
 - Built on the robust and performant **ASP.NET Core** framework.
 - Uses **.NET 8.0**, ensuring compatibility with the latest .NET features.
-- MVC architectural pattern for clean separation of concerns.
-- **Razor Pages** for dynamic web components.
+- REST architectural pattern for clean separation of concerns.
 - Fully optimized for web applications.
 - Ready for extension and scalability.
 
@@ -64,9 +63,6 @@ Below is a brief overview of the key folders and files:
 
 - **Models/**
   Defines data structures and business logic.
-
-- **Views/**
-  Contains the Razor Page views for rendering HTML.
 
 - **Program.cs**
   The application entry point.
