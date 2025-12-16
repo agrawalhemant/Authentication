@@ -75,7 +75,11 @@ public class Program
         {
             options.AddPolicy("AllowFrontend", policy =>
             {
-                policy.WithOrigins("http://localhost:3000")
+                policy.WithOrigins(
+                        "http://localhost:3000", 
+                        "https://localhost:3001",
+                        "https://localhost:3002"
+                        )
                       .AllowAnyHeader()
                       .AllowAnyMethod();
             });
