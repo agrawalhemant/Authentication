@@ -42,6 +42,10 @@ public class AuthController : ControllerBase
     {
         try
         {
+            if (request is null)
+            {
+                return BadRequest("invalid request body. Please provide valid request body.");
+            }
             // Register user
             var response = await _authService.RegisterAsync(request, cancellationToken);
             
@@ -71,6 +75,10 @@ public class AuthController : ControllerBase
     {
         try
         {
+            if (request is null)
+            {
+                return BadRequest("invalid request body. Please provide valid request body.");
+            }
             var res = await _authService.LoginAsync(request, cancellationToken);
             if (res.Item2 is null)
                 return Unauthorized("Either email or password is incorrect.");
@@ -111,6 +119,10 @@ public class AuthController : ControllerBase
     {
         try
         {
+            if (request is null)
+            {
+                return BadRequest("invalid request body. Please provide valid request body.");
+            }
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!Guid.TryParse(userIdClaim, out var userId))
                 return Unauthorized("Invalid user ID.");
@@ -137,6 +149,10 @@ public class AuthController : ControllerBase
     {
         try
         {
+            if (request is null)
+            {
+                return BadRequest("invalid request body. Please provide valid request body.");
+            }
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!Guid.TryParse(userIdClaim, out var userId))
                 return Unauthorized("Invalid user ID.");
