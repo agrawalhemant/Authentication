@@ -1,18 +1,18 @@
 # Live Project Link
-https://authentication-c19a.onrender.com/swagger/index.html
+https://auth-swagger.hemantagrawal.in/swagger/index.html
 
 There is a rate limit of 100 requests per minute 
 
-# ASP.NET Core Project
+# .NET Core Web API Project
 
-This project is built using **ASP.NET Core**, targeting **.NET 8.0**.
+This project is built using **ASP.NET Core**, targeting **.NET 10.0**.
 
 ---
 
 ## Features
 
 - Built on the robust and performant **ASP.NET Core** framework.
-- Uses **.NET 8.0**, ensuring compatibility with the latest .NET features.
+- Uses **.NET 10.0**, ensuring compatibility with the latest .NET features.
 - REST architectural pattern for clean separation of concerns.
 - Fully optimized for web applications.
 - Ready for extension and scalability.
@@ -23,10 +23,10 @@ This project is built using **ASP.NET Core**, targeting **.NET 8.0**.
 
 To run this project locally, ensure you have the following installed:
 
-1. **.NET SDK 8.0 or higher**  
+1. **.NET SDK 10.0 or higher**  
    Download from: [https://dotnet.microsoft.com/download](https://dotnet.microsoft.com/download)
 
-2. **Visual Studio 2022** or **JetBrains Rider**  
+2. **Visual Studio 2026** or **Visual Studio** or **JetBrains Rider**  
    (For development and debugging)
 
 ---
@@ -50,7 +50,7 @@ Restore dependencies and build the solution.
 Start the application locally:
 
 
-The application will be accessible at `http://localhost:5000` by default, or as specified in the `launchSettings.json` file.
+The application will be accessible at `http://localhost:5078` by default, or as specified in the `launchSettings.json` file.
 
 ---
 
@@ -76,23 +76,15 @@ Below is a brief overview of the key folders and files:
 
 - **ASP.NET Core**
 - **Entity Framework Core** 
-- **C# 12.0**
-- **.NET 8.0**
-
----
-
-## Development
-
-### Debugging
-
-The project is optimized for debugging in **JetBrains Rider** on macOS Sonoma. Set breakpoints in your code, and use the Rider debugger to inspect variables and manage execution flow.
+- **C# 14.0**
+- **.NET 10.0**
 
 ---
 
 ## Contact
 
-For any inquiries or issues, feel free to contact the team or open a GitHub issue.
+For any inquiries or issues, feel free to mail me @ hemantagrawal.work@gmail.com.
 
 ---
 
-Thank you for using this project! 😊
+Thank you for checking out this project! 😊
