@@ -3,7 +3,7 @@ on:
   schedule:
     # Runs every 50 minutes (Render sleeps after 15, 
     # but 50 is plenty to keep Supabase happy and Render warm enough)
-    - cron: '*/50 * * * *'
+    - cron: '*/14 * * * *'
   workflow_dispatch: # Allows you to run it manually for testing
 
 jobs:
