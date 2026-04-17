@@ -1,21 +1,41 @@
+using System.Threading.Tasks;
+using Authentication.DAL;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
 
 namespace Authentication.API.Controllers;
 
 [ApiController]
 public class HealthController : ControllerBase
 {
-    public HealthController()
+    private readonly AuthDbContext _dbContext;
+
+    public HealthController(AuthDbContext dbContext)
     {
-        
+        _dbContext = dbContext;
     }
     
     [DisableRateLimiting]
     [Route("")]
     [HttpGet]
-    public IActionResult Get()
+    public async Task<IActionResult> Get()
     {
-        return Ok("Authentication API is up and running.");
+        if (!await _dbContext.Database.CanConnectAsync())
+        {
+            return StatusCode(StatusCodes.Status503ServiceUnavailable, new
+            {
+                status = "Unhealthy",
+                message = "Unable to connect to the database."
+            });
+        }
+
+        return Ok(new
+        {
+            status = "Healthy",
+            message = "Authentication API is up and running.",
+            database = "Connected"
+        });
     }
 }
