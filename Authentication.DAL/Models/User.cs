@@ -21,8 +21,6 @@ public partial class User
 
     public bool isphoneverified { get; set; }
 
-    public string preferredlanguage { get; set; }
-
     public string role { get; set; }
 
     public bool isactive { get; set; } = true;

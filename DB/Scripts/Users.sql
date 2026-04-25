@@ -7,7 +7,6 @@ CREATE TABLE Users (
                        PasswordHash TEXT NOT NULL,
                        IsEmailVerified BOOLEAN DEFAULT FALSE,
                        IsPhoneVerified BOOLEAN DEFAULT FALSE,
-                       PreferredLanguage VARCHAR(10) DEFAULT 'en',
                        Role VARCHAR(20) DEFAULT 'User',
                        IsActive BOOLEAN DEFAULT TRUE,
                        CreatedAt TIMESTAMPTZ DEFAULT now(),

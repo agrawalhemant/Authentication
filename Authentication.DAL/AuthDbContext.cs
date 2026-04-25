@@ -96,9 +96,6 @@ public partial class AuthDbContext : DbContext
             entity.Property(e => e.isphoneverified).HasDefaultValue(false);
             entity.Property(e => e.lastname).HasMaxLength(100);
             entity.Property(e => e.phonenumber).HasMaxLength(15);
-            entity.Property(e => e.preferredlanguage)
-                .HasMaxLength(10)
-                .HasDefaultValueSql("'en'::character varying");
             entity.Property(e => e.role)
                 .HasMaxLength(20)
                 .HasDefaultValueSql("'User'::character varying");
