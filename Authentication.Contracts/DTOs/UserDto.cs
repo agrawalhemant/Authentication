@@ -11,5 +11,4 @@ public class UserDto
     public string Email { get; set; } = null!;
 
     public string? PhoneNumber { get; set; }
-    public string PreferredLanguage { get; set; } = null!;
 }

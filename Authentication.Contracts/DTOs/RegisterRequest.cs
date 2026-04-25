@@ -21,12 +21,4 @@ public class RegisterRequest
         get => _role;
         set => _role = string.IsNullOrWhiteSpace(value) ? nameof(UserRole.User) : value;
     }
-
-    private string _language = nameof(PreferredLanguages.English);
-    [EnumDataType(typeof(PreferredLanguages))]
-    public string PreferredLanguage
-    {
-        get => _language;
-        set => _language = string.IsNullOrWhiteSpace(value) ? nameof(PreferredLanguages.English) : value;
-    }
 }
