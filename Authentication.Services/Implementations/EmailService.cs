@@ -25,13 +25,8 @@ public class EmailService : IEmailService
     public async Task SendWelcomeEmailAsync(string toEmail, string firstName, CancellationToken cancellationToken = default)
     {
         const string subject = "Welcome to Authentication App";
-        var path = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "WelcomeEmail.html");
-        var htmlTemplate = await File.ReadAllTextAsync(path, cancellationToken);
-        
-        var emailHtml = htmlTemplate
-            .Replace("{{FirstName}}", firstName)
-            .Replace("{{AppName}}", "Authentication App")
-            .Replace("{{CurrentYear}}", DateTime.UtcNow.Year.ToString());
+
+        var emailHtml = Email.GetWelcomeEmailTemplate(firstName);
         await SendEmailAsync(toEmail, subject, emailHtml, cancellationToken);
     }
 
@@ -104,13 +99,15 @@ public class EmailService : IEmailService
 
         var from = new EmailAddress(_settings.FromEmail, _settings.FromName);
         var to = new EmailAddress(toEmail);
+        var apiKey = _settings.ApiKey;
         
         var msg = MailHelper.CreateSingleEmail(from, to, subject, "", emailHtml);
         var response = await client.SendEmailAsync(msg, cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
-            throw new Exception($"Failed to send email. Status: {response.StatusCode}");
+            var errorBody = await response.Body.ReadAsStringAsync();
+            throw new Exception($"Failed to send email. Status: {response.StatusCode}, Error: {errorBody}");
         }
     }
     #endregion
